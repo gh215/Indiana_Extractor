@@ -7,7 +7,7 @@ from PIL import Image
 from gradio_client import Client, handle_file
 
 # --- НАСТРОЙКИ ---
-BASE_DIR = Path(r"D:\Test jones\Resource\mat")
+BASE_DIR = Path(r"C:\Users\yaros\Desktop\in")
 USED_MAT_DIR = BASE_DIR / "used_mat"
 USED_MANUAL_MAT_DIR = BASE_DIR / "used_manual_mat"
 EXTRACTED_DIR = BASE_DIR / "extracted"

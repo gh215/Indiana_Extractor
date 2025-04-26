@@ -4,9 +4,9 @@ import sys # Добавили sys для выхода при ошибке
 
 # --- НАСТРОЙКИ ---
 # Папка с ИСХОДНЫМИ .mat файлами, которые должны были быть обработаны
-MAT_DIR = Path(r"D:\Test jones\Resource\mat")
+MAT_DIR = Path(r"C:\Users\yaros\Desktop\in")
 # Папка с РЕЗУЛЬТАТАМИ обработки (PNG/WEBP)
-USED_DIR = Path(r"D:\Test jones\Resource\mat\used")
+USED_DIR = Path(r"C:\Users\yaros\Desktop\in\used")
 
 # Расширения файлов-результатов в папке USED_DIR
 VALID_EXTENSIONS = {".png", ".webp"}
