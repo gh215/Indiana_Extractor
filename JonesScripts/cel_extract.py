@@ -5,7 +5,7 @@ import shutil
 from pathlib import Path
 
 # --- НАСТРОЙКИ ---
-BASE_DIR = Path(r"D:\Test jones\Resource\mat")
+BASE_DIR = Path(r"C:\Users\yaros\Desktop\in")
 MANUAL_CEL_DIR = BASE_DIR / "manual_cel_processing" # Откуда берем MAT
 EXTRACTED_DIR = BASE_DIR / "extracted"             # Куда извлекаем PNG (в папки форматов)
 USED_MANUAL_MAT_DIR = BASE_DIR / "used_manual_mat" # Куда перемещаем MAT после извлечения

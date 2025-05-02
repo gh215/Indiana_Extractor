@@ -7,7 +7,7 @@ import time
 # import os # os.path.splitext не нужен, используем pathlib
 
 # --- НАСТРОЙКИ ---
-BASE_DIR = Path(r"D:\Test jones\Resource\mat")
+BASE_DIR = Path(r"C:\Users\yaros\Desktop\in")
 ORIGINAL_CEL_MAT_DIR = BASE_DIR / "used_manual_mat" # Откуда берем инфо/оригиналы MAT
 PROCESSED_PNG_DIR = BASE_DIR / "processed_png"     # Откуда берем апскейлнутые CEL PNG
 FINAL_MAT_DIR = BASE_DIR / "final_mat"           # Куда кладем результат

@@ -6,7 +6,7 @@ import sys
 # ВАЖНО: Используй двойные обратные слеши (\\) для Windows или одинарные прямые (/) для Linux/macOS.
 # Пример для Windows: 'C:\\Users\\ТвоеИмя\\Documents\\МоиФайлы'
 # Пример для Linux/macOS: '/home/ТвоеИмя/Документы/МоиФайлы'
-directory_path = r'C:\Users\yaros\Desktop\Ready Scripts\cel_ready_scripts'  # <<<=== ИЗМЕНИ ЭТОТ ПУТЬ!
+directory_path = r'C:\Users\yaros\Desktop\in\cel_ready_scripts'  # <<<=== ИЗМЕНИ ЭТОТ ПУТЬ!
 
 # Часть имени файла, которую нужно удалить
 substring_to_remove = '__cel_0'

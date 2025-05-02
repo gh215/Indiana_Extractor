@@ -5,7 +5,7 @@ import shutil
 from pathlib import Path
 
 # --- НАСТРОЙКИ ---
-BASE_DIR = Path(r"D:\Test jones\Resource\mat")
+BASE_DIR = Path(r"C:\Users\yaros\Desktop\in")
 MAT_DIR = BASE_DIR
 EXTRACTED_DIR = BASE_DIR / "extracted" # Главная папка для извлеченных файлов и подпапок форматов
 USED_DIR = BASE_DIR / "used"           # Папка с УЖЕ АПСКЕЙЛЕННЫМИ результатами (PNG)
