@@ -6,7 +6,7 @@ from pathlib import Path
 import time
 
 # --- НАСТРОЙКИ ---
-BASE_DIR = Path(r"C:\Users\yaros\Desktop\in")
+BASE_DIR = Path(r"D:\Modified\mat")
 OLD_MAT_DIR = BASE_DIR / "used_mat"         # <-- Отсюда берем инфо для MAT
 USED_PNG_DIR = BASE_DIR / "used"            # <-- Сюда перемещаем апскейл PNG после использования
 EXTRACTED_DIR = BASE_DIR / "extracted"      # <-- Отсюда удаляем оригинальный извлеченный PNG

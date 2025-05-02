@@ -7,7 +7,7 @@ from PIL import Image
 from gradio_client import Client, handle_file
 
 # --- НАСТРОЙКИ ---
-BASE_DIR = Path(r"C:\Users\yaros\Desktop\in")
+BASE_DIR = Path(r"D:\Modified\mat")
 USED_MAT_DIR = BASE_DIR / "used_mat"
 USED_MANUAL_MAT_DIR = BASE_DIR / "used_manual_mat"
 EXTRACTED_DIR = BASE_DIR / "extracted"
@@ -263,8 +263,6 @@ def process_single_png(original_extracted_png_path, client):
             print(f"  ОШИБКА: Не удалось восстановить альфа-канал для {upscaled_path.name}.")
             # Оставляем файл без альфы или с некорректной, но считаем ошибкой
             return "error_alpha_restore"
-    # else:
-        # print("  Альфа-канал не требуется.") # Опционально
 
     # Пауза перед следующим файлом
     if API_PAUSE_DURATION > 0:
