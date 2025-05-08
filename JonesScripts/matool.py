@@ -4,7 +4,7 @@ from pathlib import Path
 
 class Tool:
     def __init__(self, primary_exe_path: Path, cwd: Path, alternative_exe_path: Path | None = None):
-        self.cwd = cwd фыу
+        self.cwd = cwd
         self.executable_path = None
 
         if primary_exe_path.exists() and primary_exe_path.is_file():
