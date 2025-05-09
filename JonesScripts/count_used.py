@@ -1,102 +1,86 @@
-from pathlib import Path
 import re
-import sys # Добавили sys для выхода при ошибке
-
-# --- НАСТРОЙКИ ---
-# Папка с ИСХОДНЫМИ .mat файлами, которые должны были быть обработаны
-MAT_DIR = Path(r"C:\Users\yaros\Desktop\in")
-# Папка с РЕЗУЛЬТАТАМИ обработки (PNG/WEBP)
-USED_DIR = Path(r"C:\Users\yaros\Desktop\in\used")
-
-# Расширения файлов-результатов в папке USED_DIR
-VALID_EXTENSIONS = {".png", ".webp"}
-
-# Имя исполняемого файла matool, чтобы исключить его из списка .mat
-MATOOL_FILENAME = "matool.exe"
-
-# --- Логика ---
+import sys
+from pathlib import Path
+from conf import Config
 
 def get_mat_bases(directory: Path) -> set | None:
-    """
-    Получает множество базовых имен (.stem) всех .mat файлов в директории,
-    исключая matool.exe.
-    """
     if not directory.is_dir():
         print(f"ОШИБКА: Директория с MAT файлами не найдена: {directory}")
         return None
     mat_bases = set()
     print(f"\nСканирование папки с MAT файлами: {directory}")
     count = 0
+    skipped_matool = 0
     for item in directory.iterdir():
-        # Считаем только .mat файлы, исключая matool.exe
-        if item.is_file() and item.suffix.lower() == ".mat" and item.name.lower() != MATOOL_FILENAME.lower():
+        if item.is_file() and item.suffix.lower() == ".mat":
+            if item.name.lower() == Config.MATOOL_FILENAME.lower():
+                skipped_matool += 1
+                continue
             mat_bases.add(item.stem)
             count += 1
     print(f"Найдено {count} .mat файлов (базовых имен: {len(mat_bases)}).")
+    if skipped_matool > 0:
+        print(f"(Пропущено {skipped_matool} файлов с именем {Config.MATOOL_FILENAME})")
     return mat_bases
 
-def get_accounted_bases(directory: Path, valid_extensions: set) -> set | None:
-    """ Получает множество "учтенных" базовых имен из папки с результатами (used), применяя правила для __cel_ файлов. """
+def get_accounted_bases(directory: Path) -> set | None:
     if not directory.is_dir():
-        print(f"ОШИБКА: Директория с результатами (used) не найдена: {directory}")
+        print(f"ОШИБКА: Директория с результатами ({directory.name}) не найдена: {directory}")
         return None
 
     accounted_bases = set()
-    processed_cel_bases = set() # Для уникального учета CEL баз
+    processed_cel_bases = set()
 
     print(f"\nСканирование папки с результатами: {directory}")
     all_files = list(directory.iterdir())
-    files_to_check = [f for f in all_files if f.is_file()]
-    print(f"Найдено {len(files_to_check)} файлов для проверки.")
+    files_to_check = [f for f in all_files if f.is_file() and f.suffix.lower() in Config.VALID_EXTENSIONS]
+    print(f"Найдено {len(files_to_check)} файлов с расширениями ({', '.join(Config.VALID_EXTENSIONS)}) для проверки.")
 
+    skipped_count = 0
     for file_path in files_to_check:
         filename_lower = file_path.name.lower()
         file_extension = file_path.suffix.lower()
 
-        if file_extension not in valid_extensions:
-            continue
-
-        cel_match = re.match(r'(.+)__cel_(\d+)' + re.escape(file_extension) + r'$', filename_lower)
+        cel_match = re.match(r'(.+)__cel_0' + re.escape(file_extension) + r'$', filename_lower)
 
         if cel_match:
-            # CEL файл
             base_name = cel_match.group(1)
-            cel_index = int(cel_match.group(2))
-            if cel_index == 0:
-                # __cel_0 файл - учитываем базу один раз
-                if base_name not in processed_cel_bases:
-                    accounted_bases.add(base_name)
-                    processed_cel_bases.add(base_name)
+            if base_name not in processed_cel_bases:
+                accounted_bases.add(base_name)
+                processed_cel_bases.add(base_name)
+        elif '__cel_' in filename_lower:
+             skipped_count += 1
         else:
-            # Обычный файл - учитываем stem
             accounted_bases.add(file_path.stem)
 
     print(f"Найдено {len(accounted_bases)} 'учтенных' базовых имен в папке {directory.name}.")
+    if skipped_count > 0:
+        print(f"(Пропущено {skipped_count} файлов с __cel_X, где X != 0)")
     return accounted_bases
 
-# --- Запуск и сравнение ---
 if __name__ == "__main__":
-    # Получаем базовые имена из MAT_DIR
-    mat_bases = get_mat_bases(MAT_DIR)
+    print("--- Скрипт 4: Проверка отсутствующих MAT в папке used ---")
+
+    mat_dir_to_check = Config.MAT_DIR
+    used_dir_to_check = Config.USED_DIR
+
+    mat_bases = get_mat_bases(mat_dir_to_check)
     if mat_bases is None:
-        sys.exit(1) # Выход, если папка не найдена
+        sys.exit(1)
 
-    # Получаем учтенные базовые имена из USED_DIR
-    accounted_for_bases = get_accounted_bases(USED_DIR, VALID_EXTENSIONS)
+    accounted_for_bases = get_accounted_bases(used_dir_to_check)
     if accounted_for_bases is None:
-        sys.exit(1) # Выход, если папка не найдена
+        sys.exit(1)
 
-    # Находим разницу: какие MAT базы НЕ представлены в учтенных базах
     missing_bases = mat_bases - accounted_for_bases
 
     print("\n--- Результаты Сравнения ---")
-    print(f"Всего .mat файлов для проверки (в {MAT_DIR.name}): {len(mat_bases)}")
-    print(f"Всего 'учтенных' записей в {USED_DIR.name} (по правилам): {len(accounted_for_bases)}")
+    print(f"Всего .mat файлов для проверки (в {mat_dir_to_check.name}): {len(mat_bases)}")
+    print(f"Всего 'учтенных' записей в {used_dir_to_check.name} (по файлам без __cel_ или с __cel_0): {len(accounted_for_bases)}")
 
     if missing_bases:
-        print(f"\nОбнаружено {len(missing_bases)} .mat файлов, отсутствующих в папке '{USED_DIR.name}' (или не учтенных по правилам):")
-        # Сортируем для удобства чтения
+        print(f"\nОбнаружено {len(missing_bases)} .mat файлов из '{mat_dir_to_check.name}', отсутствующих в папке '{used_dir_to_check.name}' (или не учтенных по правилам):")
         for base in sorted(list(missing_bases)):
             print(f"- {base}.mat")
     else:
-        print("\nВсе .mat файлы из папки 'mat' имеют соответствующую запись в папке 'used' (согласно правилам подсчета).")
+        print(f"\nВсе .mat файлы из папки '{mat_dir_to_check.name}' имеют соответствующую запись в папке '{used_dir_to_check.name}' (согласно правилам подсчета).")
